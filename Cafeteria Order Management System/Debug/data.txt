@@ -1,0 +1,33 @@
+Hot Beverages
+Coffee Large
+200
+Hot Beverages
+Coffee Small
+120
+Hot Beverages
+Latte
+150
+Hot Beverages
+Latte w/ Flavour
+200
+Cold Beverages
+Iced Coffee
+200
+Cold Beverages
+Soda
+150
+Cold Beverages
+Smoothee
+300
+Snacks & Sweeets
+Boiled Egg
+50
+Snacks & Sweeets
+Fruits
+100
+Snacks & Sweeets
+Cake
+300
+Snacks & Sweeets
+Cookies
+100
