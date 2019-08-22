@@ -26,6 +26,7 @@ typedef struct Order{
 	char item[20];
 	int price;
 	int orderNumber;
+	int quantity;
 	struct Order *next;
 }Order;
 // Global Variables
@@ -40,6 +41,7 @@ void initialization();
 void createNode(char[ROW][COL]);
 void showNode();
 void takeOrder();
+void orderSuccessful();
 void fileClose();
 int main(void) {
 	fileOpen();
@@ -144,33 +146,55 @@ void showNode(){
 }
 void takeOrder(){
 	Dataset *temp = (Dataset*)malloc(sizeof(Dataset));
-	Order *order = (Order*)malloc(sizeof(Order));
+	Order *orderTemp = (Order*)malloc(sizeof(Order));
 	int i = 0;
 	char choose;
-	char tempItem[40];
-	while(choose != 'N'){
+	while(choose != 'N'){			// Only storing item and quantity, later on price will be calculated
+		Order *order = (Order*)malloc(sizeof(Order));
 		printf("\n\t What would you like to Order: ");
-		gets(userChoice[i]);
+		gets(order->item);		// Item
 		printf("\n\t Quantity: ");
-		gets(userChoice[++i]);
+		scanf("%d",& order->quantity);		// Quantity
 		printf("\n\t Do you want to Order more? (Y/N): ");
 		fflush(stdin);
 		choose = getchar();
-	}
-	i = 0;
-	temp = Head->next;
-	if(temp != NULL){
-		strcpy(tempItem, temp->item[0]);
-		if( strcmp(userChoice[i], tempItem) == 0){
-			strcpy(order->category	,	temp->category	);
-			strcpy(order->item		, 	temp->item		);
-			order->price = temp->price;
+		if(orderHead == NULL){
+			orderHead->next = order;
+			order->next = NULL;
 		}
 		else{
-
+			orderTemp = orderHead->next;
+			while(orderTemp->next != NULL){
+				orderTemp = orderTemp->next;
+			}
+			orderTemp->next = order;
+			order->next = NULL;
 		}
-		temp = temp->next;
+	}											// End of taking input
+	i = 0;
+	temp = Head->next;							// Price will be calculated
+	orderTemp = orderHead->next;
+	while(orderTemp != NULL){
+		while(temp != NULL){
+			if(strcmp(orderTemp->item, temp->item) == 0){
+				strcpy(orderTemp->category, temp->category);	// Setting the category
+				orderTemp->price = 0;			// Initializing price to 0
+				for(i = 0; i < orderTemp->quantity; i++){
+					orderTemp->price = orderTemp->price + temp->price;
+				}
+				orderTemp->orderNumber = 400000 + rand();
+			}
+		}
+		orderTemp->next = orderTemp;
 	}
+	orderSuccessful();
+}
+
+void orderSuccessful(){
+	system("cls");
+	printf("\n\t Order");
+	fflush(stdin);
+	getchar();
 }
 void fileClose(){
 	fclose(file);
