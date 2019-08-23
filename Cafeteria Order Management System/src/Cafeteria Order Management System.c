@@ -141,60 +141,99 @@ void showNode(){
 		printf("\n\t\t %s \t\t\t\t\t %d", temp->item, temp->price);
 		temp = temp->next;
 	}
-	fflush(stdin);
-	getchar();
 }
 void takeOrder(){
 	Dataset *temp = (Dataset*)malloc(sizeof(Dataset));
 	Order *orderTemp = (Order*)malloc(sizeof(Order));
 	int i = 0;
-	char choose;
+	int randNum, currentOrder;
+	randNum = rand();
+	char choose = 'Y';
 	while(choose != 'N'){			// Only storing item and quantity, later on price will be calculated
 		Order *order = (Order*)malloc(sizeof(Order));
 		printf("\n\t What would you like to Order: ");
-		gets(order->item);		// Item
+		fflush(stdin);
+		fgets(order->item, 20,stdin);		// Item
 		printf("\n\t Quantity: ");
-		scanf("%d",& order->quantity);		// Quantity
+		scanf("%d",&order->quantity);		// Quantity
 		printf("\n\t Do you want to Order more? (Y/N): ");
 		fflush(stdin);
-		choose = getchar();
-		if(orderHead == NULL){
+		scanf("%c",&choose);
+		if(orderHead->next == NULL){
 			orderHead->next = order;
 			order->next = NULL;
 		}
 		else{
 			orderTemp = orderHead->next;
-			while(orderTemp->next != NULL){
+			while(orderTemp != NULL){
+				if(orderTemp->next == NULL) break;
 				orderTemp = orderTemp->next;
 			}
 			orderTemp->next = order;
 			order->next = NULL;
 		}
+
 	}											// End of taking input
+
 	i = 0;
 	temp = Head->next;							// Price will be calculated
+
 	orderTemp = orderHead->next;
 	while(orderTemp != NULL){
 		while(temp != NULL){
-			if(strcmp(orderTemp->item, temp->item) == 0){
-				strcpy(orderTemp->category, temp->category);	// Setting the category
-				orderTemp->price = 0;			// Initializing price to 0
-				for(i = 0; i < orderTemp->quantity; i++){
-					orderTemp->price = orderTemp->price + temp->price;
+			//printf("\n %s and %s",orderTemp->item, temp->item);
+			i = 0;
+			while(orderTemp->item[i] != '\n'){
+				if(orderTemp->item[i] == temp->item[i]){
+					//printf("\n Match found");
+					strcpy(orderTemp->category, temp->category);	// Setting the category
+					orderTemp->price = 0;			// Initializing price to 0
+					for(i = 0; i < orderTemp->quantity; i++){
+						orderTemp->price = orderTemp->price + temp->price;
+						printf("\n %d",temp->price);
+					}
+					orderTemp->orderNumber = 400000 + randNum;
+					currentOrder = orderTemp->orderNumber;
+					printf("\n Success");
+
 				}
-				orderTemp->orderNumber = 400000 + rand();
+				if(orderTemp->item[i] == '\n') break;
+				i++;
+
+			//if(strcmp(orderTemp->item, temp->item) == 0){
+
+
 			}
+			temp = temp->next;
 		}
-		orderTemp->next = orderTemp;
+		orderTemp = orderTemp->next;
 	}
-	orderSuccessful();
+
+fflush(stdin);
+getchar();
+/*								Prompt Order details
+ *
+*/
+	system("cls");
+	printf("\n\t Details for Order: %d",currentOrder);
+	orderTemp = orderHead->next;
+	if(orderTemp == NULL){
+		printf("\n\t Sorry, Order can't be booked");
+	}
+	else{
+		printf("\n\n\t Category \t Item \t Quantity \t Total Price\n");
+		while(orderTemp != NULL){
+			printf("\n\t %s \t\t\t %s \t\t\t\t %d \t\t\t %d ",orderTemp->category, orderTemp->item,
+													orderTemp->quantity, orderTemp->price);
+			orderTemp = orderTemp->next;
+		}
+	}
+	fflush(stdin);
+	getchar();
 }
 
 void orderSuccessful(){
-	system("cls");
-	printf("\n\t Order");
-	fflush(stdin);
-	getchar();
+
 }
 void fileClose(){
 	fclose(file);
